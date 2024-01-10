@@ -15,7 +15,7 @@ const FoodPage = ({route, navigation}) => {
     const [restaurant, setRestaurant] = useState(1);
     const [count, setCount] = useState(1);
     const [preference, setPreference] = useState('');
-
+  let sendToOrderPage;
     const handleAdditives = (newAdditive) => { 
       setAdditives(prev=>{
         const exists = prev.some(item=> item.id !==newAdditive.id);
@@ -29,8 +29,21 @@ const FoodPage = ({route, navigation}) => {
       });
       
     }
+    const id = item.restaurant;
     // const [cartCount, setCartCount] = useContext(CartCountContext);
-
+    sendToOrderPage ={
+      orderItem :{
+        productId: item._id,
+        additives: additives,
+        quantity: count,
+       instructions:preference,
+       price: (item.price + totalPrice) * count
+      },
+      title:item.title,
+      description: item.description,
+      imageUrl: item.imageUrl[0],
+      restaurant: id
+    }
     const handlePress = (item) => { 
       const cartItem = {
         productId: item._id,
@@ -40,7 +53,7 @@ const FoodPage = ({route, navigation}) => {
       }
       addToCart(cartItem)
      }
-
+     
      const addToCart = async (cartItem) => { }
 
     useEffect(()=>{
@@ -162,7 +175,7 @@ const FoodPage = ({route, navigation}) => {
             <AntDesign name='pluscircleo' size={24} color={COLORS.lightWhite}/>
         </TouchableOpacity>
 
-        <TouchableOpacity onPress={()=>navigation.navigate("order-page")} 
+        <TouchableOpacity onPress={()=>navigation.navigate("order-page", sendToOrderPage)} 
         style={{backgroundColor: COLORS.primary, paddingHorizontal: 80, borderRadius: 30}}>
             <Text style={[styles.title, {color: COLORS.lightWhite, marginTop: 3, alignItems: 'center'}]}>Order</Text>
         </TouchableOpacity>
